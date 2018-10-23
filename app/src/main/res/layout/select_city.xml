@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="45dip">
+
     <RelativeLayout
     android:layout_width="fill_parent"
-    android:layout_height="45.0dip"
+    android:layout_height="match_parent"
     android:background="#ffcd2626" >
     <TextView
         android:id="@+id/title_name"
@@ -17,7 +18,7 @@
     <ImageView
         android:id="@+id/title_back"
         android:layout_width="45.0dip"
-        android:layout_height="45.0dip"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:src="@drawable/base_action_bar_back_normal" />
@@ -29,7 +30,11 @@
         android:layout_toRightOf="@id/title_back"
         android:background="#A71717"
         android:gravity="center" />
+
+
+
     </RelativeLayout>
+
     <!--<RelativeLayout-->
         <!--android:layout_width="fill_parent"-->
         <!--android:layout_height="wrap_content"-->
@@ -42,6 +47,16 @@
             <!--android:background="#ffffff">-->
 
         <!--</ListView>-->
+    <!--</RelativeLayout>-->
+    <!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
+    <!--<ListView-->
+        <!--android:layout_below="@id/title_name"-->
+        <!--android:id="@+id/list_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+    <!--</ListView>-->
     <!--</RelativeLayout>-->
 
 

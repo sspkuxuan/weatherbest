@@ -33,6 +33,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private ImageView mCitySelect;
 
 
+
     private TextView cityTv,timeTv,humidityTv,weekTv,pmDataTv,pmQualityTv,wenduTv,
             temperatureTv,climateTv,windTv,city_name_Tv;
     private ImageView weatherImg,pmImg;
