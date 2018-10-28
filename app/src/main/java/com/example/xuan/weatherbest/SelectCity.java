@@ -86,17 +86,20 @@ public class SelectCity extends Activity implements View.OnClickListener{
         setContentView(R.layout.select_city);
         setContentView(R.layout.city_change);
         mBackBtn=(ImageView)findViewById(R.id.title_back);
-        mBackBtn.setOnClickListener(this);
+        mBackBtn.setOnClickListener(this);//给mBackBtn创建监听
         ArrayAdapter<String>adapter=new ArrayAdapter<String>(SelectCity.this,android.R.layout.simple_list_item_1,data1);
-        ListView mylistView=(ListView)findViewById(R.id.list_view);
+        ListView mylistView=(ListView)findViewById(R.id.list_view);//定义一个listview对象
         mylistView.setAdapter(adapter);
+        /*
+        对listview的内容点击事件处理
+         */
         mylistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(SelectCity.this,"你单击了:"+i,Toast.LENGTH_SHORT).show();
 
                         Intent j = new Intent();
-                        j.putExtra("cityCode", data2[i]);
+                        j.putExtra("cityCode", data2[i]);//把城市的code信息传回MainActivity
                         setResult(RESULT_OK, j);
                         finish();
 
@@ -105,7 +108,9 @@ public class SelectCity extends Activity implements View.OnClickListener{
 
 
     }
-
+/*
+返回处理
+ */
     @Override
     public void onClick(View v){
         switch (v.getId()){

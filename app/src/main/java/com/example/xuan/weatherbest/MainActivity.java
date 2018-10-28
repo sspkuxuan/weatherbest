@@ -27,16 +27,20 @@ import java.net.URL;
 import weatherbest.bean.TodayWeather;
 import weatherbest.util.NetUtil;
 
-public class MainActivity extends Activity implements View.OnClickListener{
+public class MainActivity extends Activity implements View.OnClickListener{//定义一个MainActivity并且继承于Activity，然后设置一个Click监听器
     private static final int UPDATE_TODAY_WEATHER = 1;
     private ImageView mUpdateBtn;
-    private ImageView mCitySelect;
+    private ImageView mCitySelect;//定义两个私有ImageView属性
 
 
 
     private TextView cityTv,timeTv,humidityTv,weekTv,pmDataTv,pmQualityTv,wenduTv,
-            temperatureTv,climateTv,windTv,city_name_Tv;
-    private ImageView weatherImg,pmImg;
+           temperatureTv,climateTv,windTv,city_name_Tv;//定义私有TextView属性
+    private ImageView weatherImg,pmImg;//定义相关的控件对象
+    /*
+    通过消息机制，将解析的天气对象，通过消息发送给主线程，主线程接收到消息数
+据后，调用updateTodayWeather函数，更新UI界面上的数据。
+     */
     private Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
@@ -50,40 +54,52 @@ public class MainActivity extends Activity implements View.OnClickListener{
     };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.weather_info);
-        mUpdateBtn = (ImageView) findViewById(R.id.title_update_btn);
-        mUpdateBtn.setOnClickListener(this);
-        if (NetUtil.getNetworkState(this) != NetUtil.NETWORN_NONE) {
-            Log.d("myWeather", "网络OK");
-            Toast.makeText(MainActivity.this,"网络OK！", Toast.LENGTH_LONG).show();
-        }else
-        {
-            Log.d("myWeather", "网络挂了");
+        super.onCreate(savedInstanceState);//调用基类中的onCreate方法
+        setContentView(R.layout.weather_info);//加载布局
+        mUpdateBtn = (ImageView) findViewById(R.id.title_update_btn);//刷新图标按钮赋值给mUpdateBtn
+        mUpdateBtn.setOnClickListener(this);//在MainActivity类里设置事件处理的监听器
+        if (NetUtil.getNetworkState(this) == NetUtil.NETWORN_NONE) {//调用NetUtil类里的getNetworkState方法，判断网络是否连接
+            Log.d("myInternet", "网络挂了");
             Toast.makeText(MainActivity.this,"网络挂了！", Toast.LENGTH_LONG).show();
+        }else if (NetUtil.getNetworkState(this) == NetUtil.NETWORN_WIFI)
+        {
+            Log.d("myInternet", "网络OK，WIFI连接");
+            Toast.makeText(MainActivity.this,"WIFI连接！", Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            Log.d("myInternet", "网络OK，手机数据连接");
+            Toast.makeText(MainActivity.this,"手机数据连接！", Toast.LENGTH_LONG).show();
         }
         mCitySelect=(ImageView) findViewById(R.id.title_city_manager);
         mCitySelect.setOnClickListener(this);
         initView();
     }
     @Override
-    public void onClick(View view){
+    public void onClick(View view){//谁触发的onClick方法，view参数就是谁
         if(view.getId()==R.id.title_city_manager){
-            Intent i=new Intent(this,SelectCity.class);
+            Intent i=new Intent(this,SelectCity.class);//建立SelectCity和MainAcitivity的连接通信
             startActivityForResult(i,1);
         }
         if(view.getId()==R.id.title_update_btn){
             SharedPreferences sharedPreferences=getSharedPreferences("config",MODE_PRIVATE);
             String cityCode=sharedPreferences.getString("main_city_code","101010100");
             Log.d("myWeather",cityCode);
-            if (NetUtil.getNetworkState(this) != NetUtil.NETWORN_NONE) {
-                Log.d("myWeather", "网络OK");
+            if (NetUtil.getNetworkState(this) == NetUtil.NETWORN_NONE) {//调用NetUtil类里的getNetworkState方法，判断网络是否连接
+                Log.d("myInternet", "网络挂了");
+                Toast.makeText(MainActivity.this,"网络挂了！", Toast.LENGTH_LONG).show();
+            }else if (NetUtil.getNetworkState(this) == NetUtil.NETWORN_WIFI)
+            {
+                Log.d("myInternet", "网络OK，WIFI连接");
+                Toast.makeText(MainActivity.this,"WIFI连接！", Toast.LENGTH_LONG).show();
                 queryWeatherCode(cityCode);
-            }else {
-                Log.d("myWeather", "网络挂了");
-                Toast.makeText(MainActivity.this, "网络挂了！", Toast.LENGTH_LONG).show();
             }
-
+            else
+            {
+                Log.d("myInternet", "网络OK，手机数据连接");
+                Toast.makeText(MainActivity.this,"手机数据连接！", Toast.LENGTH_LONG).show();
+                queryWeatherCode(cityCode);
+            }
         }
     }
     /**
@@ -104,27 +120,27 @@ public class MainActivity extends Activity implements View.OnClickListener{
     }
     /**
      *
-     * @param cityCode
+     * ueryWeatherCode 更新城市天气信息
      */
     private void queryWeatherCode(String cityCode) {
-        final String address = "http://wthrcdn.etouch.cn/WeatherApi?citykey=" + cityCode;
+        final String address = "http://wthrcdn.etouch.cn/WeatherApi?citykey=" + cityCode;//定义网址地址
         Log.d("myWeather", address);
-        new Thread(new Runnable() {
+        new Thread(new Runnable() {//开启线程发送网络请求
             @Override
             public void run() {
                 HttpURLConnection con = null;
                 TodayWeather todayWeather=null;
                 try {
-                    URL url = new URL(address);
-                    con = (HttpURLConnection) url.openConnection();
-                    con.setRequestMethod("GET");
+                    URL url = new URL(address);//传入目标网址
+                    con = (HttpURLConnection) url.openConnection();//打开网址
+                    con.setRequestMethod("GET");//从服务器获取数据
                     con.setConnectTimeout(8000);
-                    con.setReadTimeout(8000);
-                    InputStream in = con.getInputStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                    StringBuilder response = new StringBuilder();
+                    con.setReadTimeout(8000);//连接超时和读取超时时间，设为8秒
+                    InputStream in = con.getInputStream();//获取从服务器返回的输入流
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));//构造一个BufferedReader，里面存放输入的字节转换后成的字符。
+                    StringBuilder response = new StringBuilder();//定义 response对象处理字符串
                     String str;
-                    while ((str = reader.readLine()) != null) {
+                    while ((str = reader.readLine()) != null) {//从BufferedReader对象中读取一行的内容
                         response.append(str);
                         Log.d("myWeather", str);
                     }
@@ -148,7 +164,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
             }
         }).start();
     }
-
+/*
+初始化天气信息
+ */
         void initView(){
         city_name_Tv = (TextView) findViewById(R.id.title_city_name);
         cityTv = (TextView) findViewById(R.id.city);
@@ -175,6 +193,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
         windTv.setText("N/A");
         wenduTv.setText("N/A");
     }
+    /*
+    更新天气信息
+     */
     void updateTodayWeather(TodayWeather todayWeather){
         city_name_Tv.setText(todayWeather.getCity()+"天气");
         cityTv.setText(todayWeather.getCity());
@@ -191,7 +212,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
     }
 
 
-
+/*
+将解析的数据存入TodayWeather对象中
+ */
         private TodayWeather parseXML(String xmldata){
         TodayWeather todayWeather=null;
         int fengxiangCount=0;

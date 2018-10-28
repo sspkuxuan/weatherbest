@@ -3,6 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--//制作顶部工具栏，使用RelativeLayout布局，工具栏名称为title，宽度设为fill_parent(fill_parent和match_parent是一样功能）布满整个屏幕
+    //高度设置为45个dip,内容设为垂直居中-->
+
     <RelativeLayout
         android:id="@+id/title"
         android:layout_width="fill_parent"
@@ -53,19 +56,22 @@
             android:layout_toLeftOf="@id/title_share"
             android:src="@drawable/base_action_bar_action_city" />
     </RelativeLayout>
+    <!--今日天气界面-->
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/title"
         android:background="@drawable/biz_plugin_weather_shenzhen_bg"
         android:orientation="vertical" >
-        <!-- 今日天气信息 -->
+        <!-- 今日天气信息 padding是设置部内布局（子控件）的边距-->
         <RelativeLayout
             android:id="@+id/weather_today"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:padding="10.0dip" >
-            <!-- 城市名称 -->
+            <!-- 城市名称 layout_alignParentLeft是相对于父控件左对齐
+            layout_alignParentTop将控件的上边缘和父控件的上边缘对齐
+            singleLine设置单行显示-->
             <TextView
                 android:id="@+id/city"
                 android:layout_width="wrap_content"
@@ -115,7 +121,8 @@
                 android:textColor="@android:color/white"
                 android:textSize="15.0sp" />
 
-            <!-- PM2.5整体信息块 -->
+            <!-- PM2.5整体信息块
+             orientation="vertical"意思是垂直布局-->
             <LinearLayout
                 android:id="@+id/pm2_5_content"
                 android:layout_width="wrap_content"

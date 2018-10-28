@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import weatherbest.bean.City;
-
+/*
+城市表格数据处理
+ */
 public class CityDB {
     public static final String CITY_DB_NAME = "city.db";
     private static final String CITY_TABLE_NAME = "city";
